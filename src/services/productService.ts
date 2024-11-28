@@ -11,9 +11,14 @@ interface CreateProductDTO {
 }
 
 export const getAllProducts = async () => {
-  const response = await axios.get(`${API_URL}/get/all`);
-  return response.data;
-};
+    try {
+      const response = await axios.get(`${API_URL}/get/all`);
+      return response.data; // Dữ liệu trả về nằm trong `response.data`
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      throw error; // Đảm bảo rằng lỗi được xử lý
+    }
+}
 
 export const createProduct = async (productDTO: CreateProductDTO) => {
   const response = await axios.post(`${API_URL}/create`, productDTO);
