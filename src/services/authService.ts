@@ -1,6 +1,6 @@
 // authService.ts
 import axios from "axios";
-import { LoginFormData, LoginResponse } from "../types.auth";  // Import interface
+import { LoginFormData, LoginResponse } from "../types/auth";  // Import interface
 
 const API_URL = "http://localhost:8080";
 
