@@ -7,18 +7,42 @@ const ProductList: React.FC = () => {
   const [products, setProducts] = useState<any[]>([]);
   const navigate = useNavigate();
 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await getAllProducts();
+  //       // Chắc chắn rằng bạn đang trích xuất dữ liệu đúng cách từ `response.data.data`
+  //       setProducts(response.data); // response.data là mảng dữ liệu sản phẩm trong JSON
+  //     } catch (error) {
+  //       console.error("Error fetching products:", error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await getAllProducts();
-        // Chắc chắn rằng bạn đang trích xuất dữ liệu đúng cách từ `response.data.data`
-        setProducts(response.data); // response.data là mảng dữ liệu sản phẩm trong JSON
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
+      // Sử dụng dữ liệu mẫu để kiểm tra
+      const sampleData = [
+        {
+          productID: 1,
+          name: "Cafee",
+          description: "Delicious coffee",
+          price: 20.5,
+          image: "link_to_image1"
+        },
+        {
+          productID: 2,
+          name: "Banh",
+          description: "Delicious cake",
+          price: 80.5,
+          image: "link_to_image2"
+        }
+      ];
+      setProducts(sampleData); // Đảm bảo hiển thị dữ liệu mẫu
     };
     fetchData();
   }, []);
+  
 
   const handleDelete = async (id: number) => {
     await deleteProduct(id);
