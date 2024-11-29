@@ -1,88 +1,94 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-import { getAllProducts, deleteProduct } from '../services/productService';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+  TextField,
+} from "@mui/material";
+import { getAllProducts, deleteProduct } from "../services/productService";
 
-const ProductList: React.FC = () => {
+interface ProductListProps {
+  onEdit: (id: number) => void;
+  onView: (id: number) => void;
+  onOpenForm: (open: boolean) => void;
+}
+
+const ProductList: React.FC<ProductListProps> = ({ onEdit, onView, onOpenForm }) => {
   const [products, setProducts] = useState<any[]>([]);
-  const navigate = useNavigate();
+  const [search, setSearch] = useState("");
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await getAllProducts();
-  //       // Chắc chắn rằng bạn đang trích xuất dữ liệu đúng cách từ `response.data.data`
-  //       setProducts(response.data); // response.data là mảng dữ liệu sản phẩm trong JSON
-  //     } catch (error) {
-  //       console.error("Error fetching products:", error);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
   useEffect(() => {
     const fetchData = async () => {
-      // Sử dụng dữ liệu mẫu để kiểm tra
-      const sampleData = [
-        {
-          productID: 1,
-          name: "Cafee",
-          description: "Delicious coffee",
-          price: 20.5,
-          image: "link_to_image1"
-        },
-        {
-          productID: 2,
-          name: "Banh",
-          description: "Delicious cake",
-          price: 80.5,
-          image: "link_to_image2"
-        }
-      ];
-      setProducts(sampleData); // Đảm bảo hiển thị dữ liệu mẫu
+      try {
+        const response = await getAllProducts();
+        setProducts(response);
+      } catch (error) {
+        console.error(error);
+      }
     };
     fetchData();
   }, []);
-  
 
   const handleDelete = async (id: number) => {
     await deleteProduct(id);
-    setProducts((prevProducts) => prevProducts.filter((product) => product.productID !== id));
+    setProducts((prev) => prev.filter((product) => product.productID !== id));
   };
 
-  const handleEdit = (id: number) => {
-    navigate(`/admin/product/edit/${id}`);
-  };
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Product Name</TableCell>
-            <TableCell>Description</TableCell>
-            <TableCell>Price</TableCell>
-            <TableCell>Image</TableCell>
-            <TableCell>Actions</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {products.map((product) => (
-            <TableRow key={product.productID}>
-              <TableCell>{product.name}</TableCell>
-              <TableCell>{product.description}</TableCell>
-              <TableCell>{product.price}</TableCell>
-              <TableCell>
-                <img src={product.image} alt={product.name} width={50} />
-              </TableCell>
-              <TableCell>
-                <Button onClick={() => handleEdit(product.productID)} color="primary">Edit</Button>
-                <Button onClick={() => handleDelete(product.productID)} color="secondary">Delete</Button>
-              </TableCell>
+    <div>
+      <TextField
+        label="Search item"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        fullWidth
+        margin="normal"
+      />
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Description</TableCell>
+              <TableCell>Price</TableCell>
+              <TableCell>Image</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {filteredProducts.map((product) => (
+              <TableRow key={product.productID}>
+                <TableCell>{product.name}</TableCell>
+                <TableCell>{product.description}</TableCell>
+                <TableCell>{product.price}</TableCell>
+                <TableCell>
+                  <img src={product.image} alt={product.name} width="50" />
+                </TableCell>
+                <TableCell>
+                  <Button color="primary" onClick={() => onView(product.productID)}>
+                    View
+                  </Button>
+                  <Button color="primary" onClick={() => onEdit(product.productID)}>
+                    Edit
+                  </Button>
+                  <Button color="secondary" onClick={() => handleDelete(product.productID)}>
+                    Delete
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
   );
 };
 
