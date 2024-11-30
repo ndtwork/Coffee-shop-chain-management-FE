@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { TextField, Button, CircularProgress, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { createProduct, updateProduct } from "../services/productService";
+import { createProduct, updateProduct } from "../../services/productService.ts";
 
 const ProductForm: React.FC<{ productId?: number }> = ({ productId }) => {
   const [productData, setProductData] = useState({

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Typography } from "@mui/material";
-import ProductList from "../components/ProductList";
-import ProductForm from "../components/ProductForm";
+import ProductList from "../components/List/ProductList.tsx";
+import ProductForm from "../components/Form/ProductForm.tsx";
 
 const AdminProduct: React.FC = () => {
   const [selectedProductId, setSelectedProductId] = useState<number | null>(null);

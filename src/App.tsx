@@ -1,23 +1,38 @@
 import React from "react";
-//import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import LoginForm from "./pages/LoginForm";
 import AdminHome from "./pages/AdminHome";
 import AdminProduct from "./pages/AdminProduct";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import AdminLayout from "./components/Layouts/AdminLayout";
 
 const App: React.FC = () => {
   return (
     <div className="App">
       <BrowserRouter>
-        {/* <Navbar /> */}
         <Routes>
+          {/* Public Routes */}
           <Route path="/" element={<LoginForm />} />
           <Route path="/home" element={<Home />} />
           <Route path="/login" element={<LoginForm />} />
-          <Route path="/admin/home" element={<AdminHome />} />
-          <Route path="/admin/product" element={<AdminProduct />} />
+
+          {/* Admin Routes */}
+          <Route
+            path="/admin/home"
+            element={
+              <AdminLayout>
+                <AdminHome />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/admin/product"
+            element={
+              <AdminLayout>
+                <AdminProduct />
+              </AdminLayout>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </div>
