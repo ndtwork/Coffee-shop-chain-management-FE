@@ -11,15 +11,17 @@ import {
   TextField,
 } from "@mui/material";
 import { getAllProducts, deleteProduct } from "../../services/productService.ts";
+import { Product } from "../../types/product.ts";
 
 interface ProductListProps {
-  onEdit: (id: number) => void;
-  onView: (id: number) => void;
-  onOpenForm: (open: boolean) => void;
+  onEdit: (product:Product) => void;
+  onView: (product:Product) => void;
+  onDelete?:(id: number) => void;
+  onOpenForm?: (open: boolean) => void;
 }
 
-const ProductList: React.FC<ProductListProps> = ({ onEdit, onView, onOpenForm }) => {
-  const [products, setProducts] = useState<any[]>([]);
+const ProductList: React.FC<ProductListProps> = ({ onEdit, onView, onOpenForm,onDelete }) => {
+  const [products, setProducts] = useState<Product[]>([]);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
@@ -73,10 +75,10 @@ const ProductList: React.FC<ProductListProps> = ({ onEdit, onView, onOpenForm })
                   <img src={product.image} alt={product.name} width="50" />
                 </TableCell>
                 <TableCell>
-                  <Button color="primary" onClick={() => onView(product.productID)}>
+                  <Button color="primary" onClick={() => onView(product)}>
                     View
                   </Button>
-                  <Button color="primary" onClick={() => onEdit(product.productID)}>
+                  <Button color="primary" onClick={() => onEdit(product)}>
                     Edit
                   </Button>
                   <Button color="secondary" onClick={() => handleDelete(product.productID)}>

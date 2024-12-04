@@ -2,16 +2,29 @@ import React, { useState } from "react";
 import { Button, Typography } from "@mui/material";
 import ProductList from "../components/List/ProductList.tsx";
 import ProductForm from "../components/Form/ProductForm.tsx";
+import { Product } from "../types/product.ts";
 
 const AdminProduct: React.FC = () => {
-  const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<Product>();
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  const handleAddProduct = () => {
-    setSelectedProductId(null);
+  const handleAddProduct = (product:Product) => {
+    setSelectedProduct(product)
     setIsFormOpen(true);
   };
-
+  const handleCreate = () => {
+    setIsFormOpen(true);
+  };
+  const handleEdit = (product:Product) => {
+    setSelectedProduct(product);
+    setIsFormOpen(true);
+  };
+  const handleDelete = () => {
+    setIsFormOpen(true);
+  };
+  const handleView = () => {
+    setIsFormOpen(true);
+  };
   const handleCloseForm = () => {
     setIsFormOpen(false);
   };
@@ -26,15 +39,15 @@ const AdminProduct: React.FC = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={handleAddProduct}
+            onClick={handleCreate}
             style={{ marginBottom: "20px" }}
           >
             + Add Item
           </Button>
-          <ProductList onEdit={setSelectedProductId} onView={setSelectedProductId} onOpenForm={setIsFormOpen} />
+          <ProductList onEdit={handleEdit} onDelete={handleDelete} onView={handleView} />
         </>
       ) : (
-        <ProductForm productId={selectedProductId} onClose={handleCloseForm} />
+        <ProductForm product={selectedProduct} onClose={handleCloseForm} />
       )}
     </div>
   );

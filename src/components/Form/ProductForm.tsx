@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { TextField, Button, CircularProgress, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { createProduct, updateProduct } from "../../services/productService.ts";
-
-const ProductForm: React.FC<{ productId?: number }> = ({ productId }) => {
-  const [productData, setProductData] = useState({
-    name: "",
-    description: "",
-    price: 0,
-    image: "",
-    productMaterials: [],
-  });
+import { Product } from "../../types/product.ts";
+interface ProductParams{
+  product?: Product
+  onClose:()=>void
+}
+const ProductForm=({product,onClose}:ProductParams) => {
+  const [productData, setProductData] = useState<Product>(product!);
   const [loading, setLoading] = useState(false); // Trạng thái xử lý
   const [error, setError] = useState<string | null>(null); // Trạng thái lỗi
   const navigate = useNavigate();
@@ -30,25 +28,27 @@ const ProductForm: React.FC<{ productId?: number }> = ({ productId }) => {
     setError(null); // Reset lỗi
 
     try {
-      if (productId) {
+      if (product) {
         // Cập nhật sản phẩm
-        await updateProduct(productId, productData);
+        await updateProduct(product.productID, productData);
       } else {
         // Thêm sản phẩm mới
         await createProduct(productData);
       }
       navigate("/admin/product"); // Chuyển hướng về danh sách sản phẩm
-    } catch (err: any) {
-      setError(err.message || "An error occurred while submitting the form");
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (err: unknown) {
+      setError("An error occurred while submitting the form");
     } finally {
       setLoading(false); // Kết thúc xử lý
+      onClose()
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <Typography variant="h6" gutterBottom>
-        {productId ? "Edit Product" : "Create Product"}
+        {product ? "Edit Product" : "Create Product"}
       </Typography>
       {error && (
         <Typography color="error" gutterBottom>
@@ -59,7 +59,7 @@ const ProductForm: React.FC<{ productId?: number }> = ({ productId }) => {
       <TextField
         label="Product Name"
         name="name"
-        value={productData.name}
+        value={productData?.name}
         onChange={handleChange}
         fullWidth
         required
@@ -68,7 +68,7 @@ const ProductForm: React.FC<{ productId?: number }> = ({ productId }) => {
       <TextField
         label="Description"
         name="description"
-        value={productData.description}
+        value={productData?.description}
         onChange={handleChange}
         fullWidth
         required
@@ -78,7 +78,7 @@ const ProductForm: React.FC<{ productId?: number }> = ({ productId }) => {
         label="Price"
         name="price"
         type="number"
-        value={productData.price}
+        value={productData?.price}
         onChange={handleChange}
         fullWidth
         required
@@ -87,7 +87,7 @@ const ProductForm: React.FC<{ productId?: number }> = ({ productId }) => {
       <TextField
         label="Image URL"
         name="image"
-        value={productData.image}
+        value={productData?.image}
         onChange={handleChange}
         fullWidth
         required
